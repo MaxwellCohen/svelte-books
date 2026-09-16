@@ -54,5 +54,6 @@
 		"clsx": "^2.1.1",
 		"tailwind-merge": "^3.7.0",
 		"thumbhash": "^0.1.1"
-	}
+	},
+	"packageManager": "pnpm@11.24.0"
 }
