@@ -1,18 +1,22 @@
+import { createRequire } from 'node:module';
 import tailwindcss from '@tailwindcss/vite';
-import cloudflareAdapter from '@sveltejs/adapter-cloudflare';
 import netlifyAdapter from '@sveltejs/adapter-netlify';
 import vercelAdapter from '@sveltejs/adapter-vercel';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
-// Pick the host adapter at build time so the same repo deploys to Vercel,
-// Netlify, and Cloudflare. Netlify sets NETLIFY; Workers Builds sets WORKERS_CI.
-const adapter =
+const require = createRequire(import.meta.url);
+const isCloudflare = Boolean(
 	process.env.CLOUDFLARE || process.env.WORKERS_CI || process.env.CF_PAGES
-		? cloudflareAdapter
-		: process.env.NETLIFY
-			? netlifyAdapter
-			: vercelAdapter;
+);
+
+// Load the Cloudflare adapter only when CLOUDFLARE/WORKERS_CI is set so
+// Vercel and Netlify builds never resolve @sveltejs/adapter-cloudflare.
+const adapter = isCloudflare
+	? require('@sveltejs/adapter-cloudflare')
+	: process.env.NETLIFY
+		? netlifyAdapter
+		: vercelAdapter;
 
 export default defineConfig({
 	plugins: [
