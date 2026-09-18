@@ -1,12 +1,20 @@
 <script lang="ts">
 	import { navigating } from '$app/state';
 	import ErrorState from '#lib/components/ui/ErrorState.svelte';
+	import {
+		EMPTY_IMAGE_URL,
+		getLargeBookImageUrl,
+		PRIORITY_COVER_COUNT
+	} from '#lib/features/book/book-constants';
 	import type { BookSummary } from '#lib/features/book/book-queries';
 	import BookGrid from '#lib/features/book/components/BookGrid.svelte';
 	import BookGridSkeleton from '#lib/features/book/components/BookGridSkeleton.svelte';
 	import BookPagination from '#lib/features/book/components/BookPagination.svelte';
 	import BookPaginationSkeleton from '#lib/features/book/components/BookPaginationSkeleton.svelte';
 	import type { PageProps } from './$types';
+
+	const GRID_SIZES =
+		'(min-width: 1280px) 14vw, (min-width: 1024px) 16vw, (min-width: 768px) 20vw, (min-width: 640px) 25vw, 33vw';
 
 	let { data }: PageProps = $props();
 
@@ -22,6 +30,19 @@
 
 <svelte:head>
 	<title>Books · Svelte Books</title>
+	{#await data.books then pageBooks}
+		{#each (pageBooks as BookSummary[]).slice(0, PRIORITY_COVER_COUNT) as book, index (book.id)}
+			{#if book.image_url && book.image_url !== EMPTY_IMAGE_URL}
+				<link
+					rel="preload"
+					as="image"
+					href={getLargeBookImageUrl(book.image_url)}
+					imagesizes={GRID_SIZES}
+					fetchpriority={index === 0 ? 'high' : undefined}
+				/>
+			{/if}
+		{/each}
+	{/await}
 </svelte:head>
 
 <div class="flex min-h-0 flex-1 flex-col">

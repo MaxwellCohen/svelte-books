@@ -2,11 +2,14 @@
 	import Button from '#lib/components/ui/Button.svelte';
 	import EmptyState from '#lib/components/ui/EmptyState.svelte';
 	import ErrorState from '#lib/components/ui/ErrorState.svelte';
+	import { EMPTY_IMAGE_URL, getLargeBookImageUrl } from '#lib/features/book/book-constants';
 	import BackToBooksLink from '#lib/features/book/components/BackToBooksLink.svelte';
 	import BookDetail from '#lib/features/book/components/BookDetail.svelte';
 	import BookDetailSkeleton from '#lib/features/book/components/BookDetailSkeleton.svelte';
 	import type { BookDetails } from '#lib/features/book/book-queries';
 	import type { PageProps } from './$types';
+
+	const DETAIL_SIZES = '(min-width: 768px) 18rem, 60vw';
 
 	let { data }: PageProps = $props();
 
@@ -29,7 +32,17 @@
 	{#await data.book}
 		<title>Svelte Books</title>
 	{:then resolvedBook}
-		<title>{(resolvedBook as BookDetails).title} · Svelte Books</title>
+		{@const book = resolvedBook as BookDetails}
+		<title>{book.title} · Svelte Books</title>
+		{#if book.image_url && book.image_url !== EMPTY_IMAGE_URL}
+			<link
+				rel="preload"
+				as="image"
+				href={getLargeBookImageUrl(book.image_url)}
+				imagesizes={DETAIL_SIZES}
+				fetchpriority="high"
+			/>
+		{/if}
 	{:catch}
 		<title>Svelte Books</title>
 	{/await}

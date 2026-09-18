@@ -8,23 +8,22 @@ function streamed<T>(promise: Promise<T>): Promise<T> {
 	return promise;
 }
 
-export const load: PageServerLoad = async ({ params, url }) => {
+export const load: PageServerLoad = async ({ isDataRequest, params, url }) => {
 	if (!Number.isInteger(Number(params.id))) {
 		error(404, 'Book not found');
 	}
 
 	const searchParams = parseSearchParams(Object.fromEntries(url.searchParams));
 	const delayMs = getApiDelayMs(searchParams);
+	const book = getBookById(params.id, delayMs).catch((err: unknown) => {
+		const message = err instanceof Error ? err.message : '';
+		if (message === 'Book not found' || message === 'Invalid book ID') {
+			error(404, 'Book not found');
+		}
+		throw err;
+	});
 
 	return {
-		book: streamed(
-			getBookById(params.id, delayMs).catch((err: unknown) => {
-				const message = err instanceof Error ? err.message : '';
-				if (message === 'Book not found' || message === 'Invalid book ID') {
-					error(404, 'Book not found');
-				}
-				throw err;
-			})
-		)
+		book: isDataRequest ? streamed(book) : await book
 	};
 };
