@@ -6,7 +6,18 @@ declare global {
 		// interface Locals {}
 		// interface PageData {}
 		// interface PageState {}
-		// interface Platform {}
+		interface Platform {
+			env: {
+				CATALOG_CACHE: {
+					get(key: string, type: 'json'): Promise<unknown>;
+					put(
+						key: string,
+						value: string,
+						options?: { expirationTtl: number }
+					): Promise<void>;
+				};
+			};
+		}
 	}
 }
 
