@@ -16,12 +16,13 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
-		"preview:cloudflare": "npm install --no-save --no-package-lock @sveltejs/adapter-cloudflare@8.0.0-next.7 && CLOUDFLARE=1 vite build && npx --yes wrangler@4.132.0 dev",
-		"deploy:cloudflare": "npm install --no-save --no-package-lock @sveltejs/adapter-cloudflare@8.0.0-next.7 && CLOUDFLARE=1 vite build && npx --yes wrangler@4.132.0 deploy"
+		"preview:cloudflare": "CLOUDFLARE=1 vite build && npx --yes wrangler@4.132.0 dev",
+		"deploy:cloudflare": "CLOUDFLARE=1 vite build && npx --yes wrangler@4.132.0 deploy"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@neondatabase/serverless": "^1.1.0",
+		"@sveltejs/adapter-cloudflare": "8.0.0-next.7",
 		"@sveltejs/adapter-netlify": "7.0.0-next.11",
 		"@sveltejs/adapter-vercel": "7.0.0-next.9",
 		"@sveltejs/kit": "^3.0.0-next.0",
