@@ -2,7 +2,10 @@
 export const CATALOG_CACHE_REVALIDATE_SECONDS = 3600;
 export const CATALOG_CACHE_EXPIRE_SECONDS = 86400;
 
-export const HTML_CACHE_CONTROL = `public, s-maxage=${CATALOG_CACHE_REVALIDATE_SECONDS}, stale-while-revalidate=${CATALOG_CACHE_EXPIRE_SECONDS}`;
+/** Match next-books HTML Cache-Control per host (Vercel vs Netlify/Cloudflare/local). */
+export const VERCEL_DOCUMENT_CACHE_CONTROL = 'public, max-age=0, must-revalidate';
+export const PRIVATE_DOCUMENT_CACHE_CONTROL =
+	'private, no-cache, no-store, max-age=0, must-revalidate';
 
 const TTL_MS = CATALOG_CACHE_REVALIDATE_SECONDS * 1000;
 
@@ -12,243 +15,205 @@ const memory = new Map<string, Entry<unknown>>();
 const inflight = new Map<string, Promise<unknown>>();
 
 function isVercel() {
-  return Boolean(envFlag("VERCEL")) && !envFlag("CLOUDFLARE");
+	return Boolean(envFlag('VERCEL')) && !envFlag('CLOUDFLARE');
 }
 
 function isNetlify() {
-  return Boolean(envFlag("NETLIFY") || envFlag("NETLIFY_BLOBS_CONTEXT")) && !envFlag("CLOUDFLARE") && !envFlag("VERCEL");
+	return (
+		Boolean(envFlag('NETLIFY') || envFlag('NETLIFY_BLOBS_CONTEXT')) &&
+		!envFlag('CLOUDFLARE') &&
+		!envFlag('VERCEL')
+	);
+}
+
+/** Public document Cache-Control matching next-books on this host. */
+export function hostDocumentCacheControl(): string {
+	return isVercel() ? VERCEL_DOCUMENT_CACHE_CONTROL : PRIVATE_DOCUMENT_CACHE_CONTROL;
 }
 
 function memoryGet<T>(key: string): T | undefined {
-  const hit = memory.get(key) as Entry<T> | undefined;
-  if (hit && hit.expiresAt > Date.now()) return hit.value;
+	const hit = memory.get(key) as Entry<T> | undefined;
+	if (hit && hit.expiresAt > Date.now()) return hit.value;
 }
 
 function memorySet<T>(key: string, value: T) {
-  memory.set(key, { expiresAt: Date.now() + TTL_MS, value });
+	memory.set(key, { expiresAt: Date.now() + TTL_MS, value });
 }
 
 type CatalogKv = {
-  get(key: string, type: "json"): Promise<unknown>;
-  put(key: string, value: string, options?: { expirationTtl: number }): Promise<void>;
+	get(key: string, type: 'json'): Promise<unknown>;
+	put(key: string, value: string, options?: { expirationTtl: number }): Promise<void>;
 };
 
 let catalogKv: CatalogKv | undefined;
 
 /** Bind Workers KV so catalog queries persist across isolates (like Next `use cache`). */
 export function bindCatalogCache(kv: CatalogKv | undefined) {
-  if (kv) catalogKv = kv;
+	if (kv) catalogKv = kv;
 }
 
 function edgeRequest(key: string) {
-  // Cache API keys must be https URLs. `.local` hosts are rejected.
-  return new Request(`https://example.com/books-catalog-cache/v1/${encodeURIComponent(key)}`);
+	// Cache API keys must be https URLs. `.local` hosts are rejected.
+	return new Request(`https://example.com/books-catalog-cache/v1/${encodeURIComponent(key)}`);
 }
 
 function edgeCache(): Cache | undefined {
-  const cachesApi = (globalThis as typeof globalThis & { caches?: CacheStorage }).caches;
-  return cachesApi?.default;
+	const cachesApi = (globalThis as typeof globalThis & { caches?: CacheStorage }).caches;
+	return cachesApi?.default;
 }
 
 function envFlag(name: string) {
-  try {
-    return typeof process !== "undefined" ? process.env?.[name] : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-function delayFromRequest(request: Request): number {
-  try {
-    const delay = Number(new URL(request.url).searchParams.get("delay") ?? 0);
-    return Number.isFinite(delay) ? Math.max(0, delay) : 0;
-  } catch {
-    return 0;
-  }
-}
-
-function isCacheableHtmlRequest(request: Request): boolean {
-  return request.method === "GET" && delayFromRequest(request) <= 0;
-}
-
-const UNCACHED_HTML = "private, no-store";
-
-function cacheControlForRequest(request: Request) {
-  return delayFromRequest(request) > 0 ? UNCACHED_HTML : HTML_CACHE_CONTROL;
-}
-
-function withCacheControlHeaders(response: Response, cacheControl: string) {
-  const headers = new Headers(response.headers);
-  headers.set("Cache-Control", cacheControl);
-  headers.set("CDN-Cache-Control", cacheControl);
-  headers.set("Vercel-CDN-Cache-Control", cacheControl);
-  headers.set("Netlify-CDN-Cache-Control", cacheControl);
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
+	try {
+		return typeof process !== 'undefined' ? process.env?.[name] : undefined;
+	} catch {
+		return undefined;
+	}
 }
 
 /** Cloudflare Workers freeze Response headers; copy them onto a new Response. */
-export function htmlResponseWithCacheHeaders(request: Request, response: Response): Response {
-  if (!response.headers.get("content-type")?.includes("text/html")) return response;
-  return withCacheControlHeaders(response, cacheControlForRequest(request));
+export function htmlResponseWithCacheHeaders(_request: Request, response: Response): Response {
+	if (!response.headers.get('content-type')?.includes('text/html')) return response;
+	const headers = new Headers(response.headers);
+	headers.set('Cache-Control', hostDocumentCacheControl());
+	headers.delete('CDN-Cache-Control');
+	headers.delete('Vercel-CDN-Cache-Control');
+	headers.delete('Netlify-CDN-Cache-Control');
+	return new Response(response.body, {
+		status: response.status,
+		statusText: response.statusText,
+		headers
+	});
 }
 
 async function platformGet<T>(key: string): Promise<T | undefined> {
-  try {
-    if (catalogKv) {
-      const value = await catalogKv.get(key, "json");
-      if (value != null) return value as T;
-      return;
-    }
-  } catch {
-    // KV optional / not bound.
-  }
+	try {
+		if (catalogKv) {
+			const value = await catalogKv.get(key, 'json');
+			if (value != null) return value as T;
+			return;
+		}
+	} catch {
+		// KV optional / not bound.
+	}
 
-  try {
-    if (isVercel()) {
-      const { getCache } = await import("@vercel/functions");
-      const value = await getCache({ namespace: "catalog" }).get(key);
-      if (value != null) return value as T;
-      return;
-    }
-  } catch {
-    // Optional dependency / not running on Vercel.
-  }
+	try {
+		if (isVercel()) {
+			const { getCache } = await import('@vercel/functions');
+			const value = await getCache({ namespace: 'catalog' }).get(key);
+			if (value != null) return value as T;
+			return;
+		}
+	} catch {
+		// Optional dependency / not running on Vercel.
+	}
 
-  try {
-    if (isNetlify()) {
-      const { getStore } = await import("@netlify/blobs");
-      const stored = (await getStore("catalog-cache").get(key, { type: "json" })) as Entry<T> | null;
-      if (stored && stored.expiresAt > Date.now()) return stored.value;
-      return;
-    }
-  } catch {
-    // Optional dependency / not running on Netlify.
-  }
+	try {
+		if (isNetlify()) {
+			const { getStore } = await import('@netlify/blobs');
+			const stored = (await getStore('catalog-cache').get(key, { type: 'json' })) as Entry<T> | null;
+			if (stored && stored.expiresAt > Date.now()) return stored.value;
+			return;
+		}
+	} catch {
+		// Optional dependency / not running on Netlify.
+	}
 
-  try {
-    const cache = edgeCache();
-    if (cache) {
-      const hit = await cache.match(edgeRequest(key));
-      if (hit?.ok) return (await hit.json()) as T;
-    }
-  } catch {
-    // Ignore Cache API failures.
-  }
+	try {
+		const cache = edgeCache();
+		if (cache) {
+			const hit = await cache.match(edgeRequest(key));
+			if (hit?.ok) return (await hit.json()) as T;
+		}
+	} catch {
+		// Ignore Cache API failures.
+	}
 }
 
 async function platformSet<T>(key: string, value: T): Promise<void> {
-  try {
-    if (catalogKv) {
-      await catalogKv.put(key, JSON.stringify(value), {
-        expirationTtl: CATALOG_CACHE_REVALIDATE_SECONDS,
-      });
-      return;
-    }
-  } catch {
-    // KV optional / not bound.
-  }
+	try {
+		if (catalogKv) {
+			await catalogKv.put(key, JSON.stringify(value), {
+				expirationTtl: CATALOG_CACHE_REVALIDATE_SECONDS
+			});
+			return;
+		}
+	} catch {
+		// KV optional / not bound.
+	}
 
-  try {
-    if (isVercel()) {
-      const { getCache } = await import("@vercel/functions");
-      await getCache({ namespace: "catalog" }).set(key, value, {
-        tags: ["catalog"],
-        ttl: CATALOG_CACHE_REVALIDATE_SECONDS,
-      });
-      return;
-    }
-  } catch {
-    // Optional dependency / not running on Vercel.
-  }
+	try {
+		if (isVercel()) {
+			const { getCache } = await import('@vercel/functions');
+			await getCache({ namespace: 'catalog' }).set(key, value, {
+				tags: ['catalog'],
+				ttl: CATALOG_CACHE_REVALIDATE_SECONDS
+			});
+			return;
+		}
+	} catch {
+		// Optional dependency / not running on Vercel.
+	}
 
-  try {
-    if (isNetlify()) {
-      const { getStore } = await import("@netlify/blobs");
-      await getStore("catalog-cache").setJSON(key, {
-        expiresAt: Date.now() + TTL_MS,
-        value,
-      });
-      return;
-    }
-  } catch {
-    // Optional dependency / not running on Netlify.
-  }
+	try {
+		if (isNetlify()) {
+			const { getStore } = await import('@netlify/blobs');
+			await getStore('catalog-cache').setJSON(key, {
+				expiresAt: Date.now() + TTL_MS,
+				value
+			});
+			return;
+		}
+	} catch {
+		// Optional dependency / not running on Netlify.
+	}
 
-  try {
-    const cache = edgeCache();
-    if (cache) {
-      await cache.put(
-        edgeRequest(key),
-        new Response(JSON.stringify(value), {
-          headers: {
-            "Cache-Control": `max-age=${CATALOG_CACHE_REVALIDATE_SECONDS}`,
-            "Content-Type": "application/json",
-          },
-        }),
-      );
-    }
-  } catch {
-    // Ignore Cache API write failures.
-  }
+	try {
+		const cache = edgeCache();
+		if (cache) {
+			await cache.put(
+				edgeRequest(key),
+				new Response(JSON.stringify(value), {
+					headers: {
+						'Cache-Control': `max-age=${CATALOG_CACHE_REVALIDATE_SECONDS}`,
+						'Content-Type': 'application/json'
+					}
+				})
+			);
+		}
+	} catch {
+		// Ignore Cache API write failures.
+	}
 }
 
 export async function cacheLifeHours<T>(key: string, load: () => Promise<T>): Promise<T> {
-  const cached = memoryGet<T>(key);
-  if (cached !== undefined) return cached;
+	const cached = memoryGet<T>(key);
+	if (cached !== undefined) return cached;
 
-  const pending = inflight.get(key);
-  if (pending) return pending as Promise<T>;
+	const pending = inflight.get(key);
+	if (pending) return pending as Promise<T>;
 
-  const next = (async () => {
-    const remote = await platformGet<T>(key);
-    if (remote !== undefined) {
-      memorySet(key, remote);
-      return remote;
-    }
+	const next = (async () => {
+		const remote = await platformGet<T>(key);
+		if (remote !== undefined) {
+			memorySet(key, remote);
+			return remote;
+		}
 
-    const value = await load();
-    memorySet(key, value);
-    await platformSet(key, value);
-    return value;
-  })().finally(() => {
-    inflight.delete(key);
-  });
+		const value = await load();
+		memorySet(key, value);
+		await platformSet(key, value);
+		return value;
+	})().finally(() => {
+		inflight.delete(key);
+	});
 
-  inflight.set(key, next);
-  return next;
+	inflight.set(key, next);
+	return next;
 }
 
 export function withTtlCache<Args extends unknown[], Result>(
-  name: string,
-  fn: (...args: Args) => Promise<Result>,
+	name: string,
+	fn: (...args: Args) => Promise<Result>
 ): (...args: Args) => Promise<Result> {
-  return (...args: Args) => cacheLifeHours(`${name}:${JSON.stringify(args)}`, () => fn(...args));
-}
-
-export async function matchCachedHtml(request: Request): Promise<Response | undefined> {
-  if (!isCacheableHtmlRequest(request)) return;
-  const cache = edgeCache();
-  if (!cache) return;
-  try {
-    const hit = await cache.match(request);
-    return hit?.ok ? hit : undefined;
-  } catch {
-    return;
-  }
-}
-
-export async function storeCachedHtml(request: Request, response: Response): Promise<void> {
-  if (!isCacheableHtmlRequest(request) || !response.ok) return;
-  if (!response.headers.get("content-type")?.includes("text/html")) return;
-  const cache = edgeCache();
-  if (!cache) return;
-  try {
-    await cache.put(request, withCacheControlHeaders(response.clone(), HTML_CACHE_CONTROL));
-  } catch {
-    // Best-effort HTML edge cache.
-  }
+	return (...args: Args) => cacheLifeHours(`${name}:${JSON.stringify(args)}`, () => fn(...args));
 }
