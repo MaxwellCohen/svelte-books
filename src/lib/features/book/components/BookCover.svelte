@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { EMPTY_IMAGE_URL, getLargeBookImageUrl } from '#lib/features/book/book-constants';
+	import { imageOptimizationEnabled } from '#lib/image-config';
 	import { cn } from '#lib/utils';
+	import { Image } from '@unpic/svelte/base';
 	import { thumbHashToDataURL } from 'thumbhash';
+	import { transform as ipxTransform } from 'unpic/providers/ipx';
+	import type { URLTransformer } from 'unpic';
 
 	type Props = {
 		title: string;
@@ -33,10 +37,20 @@
 		}
 	}
 
+	/** Pass-through when IPX is disabled (Cloudflare) — original remote URL. */
+	const passthroughTransform: URLTransformer = (source) => String(source);
+
+	const transformer = $derived(
+		imageOptimizationEnabled ? ipxTransform : passthroughTransform
+	);
+
 	const readySrc = $derived(getLargeBookImageUrl(src ?? EMPTY_IMAGE_URL));
 	let failedSrc = $state<string | null>(null);
 	const placeholder = $derived(thumbhashUrl(thumbhash));
 	const showImage = $derived(readySrc !== failedSrc);
+
+	/** Lean srcset for small cover thumbnails (mirrors nuxt-books cover screens). */
+	const coverBreakpoints = [160, 320, 480, 640, 768];
 </script>
 
 <div
@@ -49,17 +63,23 @@
 		: undefined}
 >
 	{#if showImage}
-		<img
+		<Image
 			alt={title}
+			aspectRatio={2 / 3}
+			breakpoints={coverBreakpoints}
 			class="absolute inset-0 h-full w-full object-cover"
 			decoding="async"
-			fetchpriority={priority ? 'high' : undefined}
-			loading={priority ? 'eager' : 'lazy'}
-			onerror={(event) => {
-				failedSrc = (event.currentTarget as HTMLImageElement).getAttribute('src');
-			}}
+			layout="fullWidth"
+			objectFit="cover"
+			operations={imageOptimizationEnabled ? { f: 'webp' } : undefined}
+			{priority}
 			{sizes}
 			src={readySrc}
+			{transformer}
+			unstyled
+			onerror={() => {
+				failedSrc = readySrc;
+			}}
 		/>
 	{:else}
 		<div
