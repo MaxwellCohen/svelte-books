@@ -3,12 +3,12 @@
 	import {
 		currentSearchParams,
 		updateSearchParams
-	} from '#lib/features/book/url-helpers.svelte';
+	} from '#lib/features/book/url-helpers.svelte.ts';
 	import {
 		API_DELAY_VALUES,
 		formatApiDelay,
 		getApiDelayMs
-	} from '#lib/url-state';
+	} from '#lib/url-state.ts';
 
 	let { idPrefix }: { idPrefix: string } = $props();
 

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { setThemeContext } from '#lib/components/theme/theme-context.svelte';
+	import { setThemeContext } from '#lib/components/theme/theme-context.svelte.ts';
 	import {
 		applyThemeClass,
 		readStoredTheme,
 		THEME_STORAGE_KEY,
 		type Theme
-	} from '#lib/components/theme/theme';
+	} from '#lib/components/theme/theme.ts';
 	import type { Snippet } from 'svelte';
 
 	let { children }: { children: Snippet } = $props();

@@ -5,8 +5,8 @@
 		EMPTY_IMAGE_URL,
 		getLargeBookImageUrl,
 		PRIORITY_COVER_COUNT
-	} from '#lib/features/book/book-constants';
-	import type { BookSummary } from '#lib/features/book/book-queries';
+	} from '#lib/features/book/book-constants.ts';
+	import type { BookSummary } from '#lib/features/book/book-queries.ts';
 	import BookGrid from '#lib/features/book/components/BookGrid.svelte';
 	import BookGridSkeleton from '#lib/features/book/components/BookGridSkeleton.svelte';
 	import BookPagination from '#lib/features/book/components/BookPagination.svelte';

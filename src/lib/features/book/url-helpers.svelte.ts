@@ -6,7 +6,7 @@ import {
 	stringifySearchParams,
 	withFilters,
 	type SearchParams
-} from '#lib/url-state';
+} from '#lib/url-state.ts';
 
 export function currentSearchParams(): SearchParams {
 	return parseSearchParams(Object.fromEntries(page.url.searchParams));

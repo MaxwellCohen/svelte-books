@@ -1,5 +1,5 @@
-import { EMPTY_IMAGE_URL } from '#lib/features/book/book-constants';
-import type { BookDetails } from '#lib/features/book/book-queries';
+import { EMPTY_IMAGE_URL } from '#lib/features/book/book-constants.ts';
+import type { BookDetails } from '#lib/features/book/book-queries.ts';
 
 export const SAMPLE_BOOKS: BookDetails[] = [
   {

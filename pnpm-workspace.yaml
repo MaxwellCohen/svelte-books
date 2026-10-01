@@ -3,3 +3,9 @@ allowBuilds:
   workerd: true
 minimumReleaseAgeExclude:
   - '@cloudflare/workers-types'
+  # SvelteKit 3.0.0 and the matching adapters were published today. pnpm 11
+  # refuses versions younger than a day, which fails Workers Builds.
+  - '@sveltejs/kit@3.0.0'
+  - '@sveltejs/adapter-cloudflare@8.0.0'
+  - '@sveltejs/adapter-netlify@7.0.0'
+  - '@sveltejs/adapter-vercel@7.0.0'

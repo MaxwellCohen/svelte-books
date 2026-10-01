@@ -1,4 +1,4 @@
-import type { BookDetails } from '#lib/features/book/book-queries';
+import type { BookDetails } from '#lib/features/book/book-queries.ts';
 
 const COVERS = [
   'https://images.gr-assets.com/books/1310220028m/5333265.jpg',

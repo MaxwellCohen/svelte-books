@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { EMPTY_IMAGE_URL, getLargeBookImageUrl } from '#lib/features/book/book-constants';
-	import { imageOptimizationEnabled } from '#lib/image-config';
-	import { cn } from '#lib/utils';
+	import { EMPTY_IMAGE_URL, getLargeBookImageUrl } from '#lib/features/book/book-constants.ts';
+	import { imageOptimizationEnabled } from '#lib/image-config.ts';
+	import { cn } from '#lib/utils.ts';
 	import { Image } from '@unpic/svelte/base';
 	import { thumbHashToDataURL } from 'thumbhash';
 	import { transform as ipxTransform } from 'unpic/providers/ipx';

@@ -1,3 +1,5 @@
+import type { CatalogKv } from './catalog-kv.ts';
+
 /** Matches Next `cacheLife('hours')`: revalidate 1h, expire 24h. */
 export const CATALOG_CACHE_REVALIDATE_SECONDS = 3600;
 export const CATALOG_CACHE_EXPIRE_SECONDS = 86400;
@@ -40,11 +42,6 @@ function memorySet<T>(key: string, value: T) {
 	memory.set(key, { expiresAt: Date.now() + TTL_MS, value });
 }
 
-type CatalogKv = {
-	get(key: string, type: 'json'): Promise<unknown>;
-	put(key: string, value: string, options?: { expirationTtl: number }): Promise<void>;
-};
-
 let catalogKv: CatalogKv | undefined;
 
 /** Bind Workers KV so catalog queries persist across isolates (like Next `use cache`). */
@@ -57,8 +54,10 @@ function edgeRequest(key: string) {
 	return new Request(`https://example.com/books-catalog-cache/v1/${encodeURIComponent(key)}`);
 }
 
+type WorkersCacheStorage = CacheStorage & { default?: Cache };
+
 function edgeCache(): Cache | undefined {
-	const cachesApi = (globalThis as typeof globalThis & { caches?: CacheStorage }).caches;
+	const cachesApi = (globalThis as typeof globalThis & { caches?: WorkersCacheStorage }).caches;
 	return cachesApi?.default;
 }
 

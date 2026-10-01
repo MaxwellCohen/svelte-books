@@ -6,8 +6,8 @@
 	import ApiDelay from '#lib/features/book/components/ApiDelay.svelte';
 	import BookFilters from '#lib/features/book/components/BookFilters.svelte';
 	import CatalogSize from '#lib/features/book/components/CatalogSize.svelte';
-	import { currentSearchParams } from '#lib/features/book/url-helpers.svelte';
-	import { buildHref } from '#lib/url-state';
+	import { currentSearchParams } from '#lib/features/book/url-helpers.svelte.ts';
+	import { buildHref } from '#lib/url-state.ts';
 
 	let { idPrefix, mobile = false }: { idPrefix: string; mobile?: boolean } = $props();
 

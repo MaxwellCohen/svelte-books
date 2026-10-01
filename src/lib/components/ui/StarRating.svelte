@@ -1,6 +1,6 @@
 <script lang="ts">
 	import StarIcon from '#lib/components/ui/icons/StarIcon.svelte';
-	import { cn } from '#lib/utils';
+	import { cn } from '#lib/utils.ts';
 
 	let { class: className, rating }: { class?: string; rating: number } = $props();
 

@@ -26,6 +26,11 @@ const ipxHandler = path.resolve(
 		: 'src/lib/server/ipx-handler.ts'
 );
 
+const catalogKv = path.resolve(
+	root,
+	isCloudflare ? 'src/lib/server/catalog-kv.cloudflare.ts' : 'src/lib/server/catalog-kv.ts'
+);
+
 export default defineConfig({
 	define: {
 		// Mirror nuxt-books: skip IPX on Cloudflare Workers (sharp unsupported).
@@ -36,8 +41,8 @@ export default defineConfig({
 	resolve: {
 		// Keep sharp/IPX out of Cloudflare Worker bundles.
 		alias: {
-			'#lib/server/ipx-handler': ipxHandler,
-			'$lib/server/ipx-handler': ipxHandler
+			'#lib/server/ipx-handler.ts': ipxHandler,
+			'#lib/server/catalog-kv.ts': catalogKv
 		}
 	},
 	plugins: [

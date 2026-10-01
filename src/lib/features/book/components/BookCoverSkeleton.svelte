@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Skeleton from '#lib/components/ui/Skeleton.svelte';
-	import { cn } from '#lib/utils';
+	import { cn } from '#lib/utils.ts';
 
 	let { class: className }: { class?: string } = $props();
 </script>

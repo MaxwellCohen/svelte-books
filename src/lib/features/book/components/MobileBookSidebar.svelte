@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setMobileSidebarContext } from '#lib/features/book/components/mobile-sidebar-context.svelte';
+	import { setMobileSidebarContext } from '#lib/features/book/components/mobile-sidebar-context.svelte.ts';
 	import XIcon from '#lib/components/ui/icons/XIcon.svelte';
 	import type { Snippet } from 'svelte';
 

@@ -3,10 +3,10 @@ import {
 	getBookById as loadBookById,
 	getBooksCount as loadBooksCount,
 	getBooksPage as loadBooksPage
-} from '#lib/features/book/book-queries';
-import type { BookFilters, BookQuery } from '#lib/features/book/book-utils';
-import { MAX_API_DELAY_MS } from '#lib/url-state';
-import { delay } from '#lib/utils';
+} from '#lib/features/book/book-queries.ts';
+import type { BookFilters, BookQuery } from '#lib/features/book/book-utils.ts';
+import { MAX_API_DELAY_MS } from '#lib/url-state.ts';
+import { delay } from '#lib/utils.ts';
 
 export function getEffectiveApiDelayMs(requestedMs = 0) {
 	const envMs = Number(API_DELAY_MS ?? 0);

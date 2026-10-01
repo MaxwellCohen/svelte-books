@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '#lib/utils';
+	import { cn } from '#lib/utils.ts';
 	import type { Snippet } from 'svelte';
 	import type { HTMLSelectAttributes } from 'svelte/elements';
 	import ChevronDownIcon from '#lib/components/ui/icons/ChevronDownIcon.svelte';

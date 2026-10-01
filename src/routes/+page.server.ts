@@ -1,6 +1,6 @@
-import { toBookFilters, toBookQuery } from '#lib/features/book/book-utils';
-import { getBooksCount, getBooksPage } from '#lib/server/books';
-import { getApiDelayMs, parseSearchParams } from '#lib/url-state';
+import { toBookFilters, toBookQuery } from '#lib/features/book/book-utils.ts';
+import { getBooksCount, getBooksPage } from '#lib/server/books.ts';
+import { getApiDelayMs, parseSearchParams } from '#lib/url-state.ts';
 import type { PageServerLoad } from './$types';
 
 function streamed<T>(promise: Promise<T>): Promise<T> {

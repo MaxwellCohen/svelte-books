@@ -15,12 +15,12 @@
 		PAGE_FILTER_VALUES,
 		RATING_FILTER_VALUES,
 		YEAR_FILTER_VALUES
-	} from '#lib/features/book/book-constants';
+	} from '#lib/features/book/book-constants.ts';
 	import {
 		currentSearchParams,
 		updateSearchParams
-	} from '#lib/features/book/url-helpers.svelte';
-	import { withFilters, type SearchParams } from '#lib/url-state';
+	} from '#lib/features/book/url-helpers.svelte.ts';
+	import { withFilters, type SearchParams } from '#lib/url-state.ts';
 
 	let { idPrefix }: { idPrefix: string } = $props();
 

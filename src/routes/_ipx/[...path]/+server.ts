@@ -1,5 +1,5 @@
-import { passThroughIpx } from '#lib/server/ipx-passthrough';
-import { imageOptimizationEnabled } from '#lib/image-config';
+import { passThroughIpx } from '#lib/server/ipx-passthrough.ts';
+import { imageOptimizationEnabled } from '#lib/image-config.ts';
 import type { RequestHandler } from './$types';
 
 /**
@@ -13,7 +13,7 @@ export const GET: RequestHandler = async (event) => {
 		return passThroughIpx(event);
 	}
 
-	const { handleIpxRequest } = await import('#lib/server/ipx-handler');
+	const { handleIpxRequest } = await import('#lib/server/ipx-handler.ts');
 	return handleIpxRequest(event.request);
 };
 

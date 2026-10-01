@@ -1,9 +1,9 @@
 <script lang="ts">
 	import EmptyState from '#lib/components/ui/EmptyState.svelte';
-	import { ITEMS_PER_PAGE, PRIORITY_COVER_COUNT } from '#lib/features/book/book-constants';
-	import type { BookSummary } from '#lib/features/book/book-queries';
+	import { ITEMS_PER_PAGE, PRIORITY_COVER_COUNT } from '#lib/features/book/book-constants.ts';
+	import type { BookSummary } from '#lib/features/book/book-queries.ts';
 	import BookCard from '#lib/features/book/components/BookCard.svelte';
-	import { getCurrentPage, type SearchParams } from '#lib/url-state';
+	import { getCurrentPage, type SearchParams } from '#lib/url-state.ts';
 
 	const gridClass =
 		'grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7';

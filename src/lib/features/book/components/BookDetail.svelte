@@ -5,8 +5,8 @@
 	import CalendarDaysIcon from '#lib/components/ui/icons/CalendarDaysIcon.svelte';
 	import GlobeIcon from '#lib/components/ui/icons/GlobeIcon.svelte';
 	import HashIcon from '#lib/components/ui/icons/HashIcon.svelte';
-	import type { BookDetails } from '#lib/features/book/book-queries';
-	import { formatCount, getLanguageLabel } from '#lib/features/book/book-utils';
+	import type { BookDetails } from '#lib/features/book/book-queries.ts';
+	import { formatCount, getLanguageLabel } from '#lib/features/book/book-utils.ts';
 	import BookCover from '#lib/features/book/components/BookCover.svelte';
 
 	const DETAIL_SIZES = '(min-width: 768px) 18rem, 60vw';

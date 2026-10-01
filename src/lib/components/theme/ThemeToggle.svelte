@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { useTheme } from '#lib/components/theme/theme-context.svelte';
+	import { useTheme } from '#lib/components/theme/theme-context.svelte.ts';
 	import MonitorIcon from '#lib/components/ui/icons/MonitorIcon.svelte';
 	import MoonIcon from '#lib/components/ui/icons/MoonIcon.svelte';
 	import SunIcon from '#lib/components/ui/icons/SunIcon.svelte';
-	import { cn } from '#lib/utils';
+	import { cn } from '#lib/utils.ts';
 
 	let { variant = 'pill' }: { variant?: 'inline' | 'pill' } = $props();
 

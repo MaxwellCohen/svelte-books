@@ -8,8 +8,8 @@
 	import {
 		currentSearchParams,
 		navigateSearch
-	} from '#lib/features/book/url-helpers.svelte';
-	import { withFilters } from '#lib/url-state';
+	} from '#lib/features/book/url-helpers.svelte.ts';
+	import { withFilters } from '#lib/url-state.ts';
 	import { navigating } from '$app/state';
 
 	const DEBOUNCE_MS = 220;

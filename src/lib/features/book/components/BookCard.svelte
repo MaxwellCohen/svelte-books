@@ -1,8 +1,8 @@
 <script lang="ts">
 	import FastLink from '#lib/components/ui/FastLink.svelte';
-	import type { BookSummary } from '#lib/features/book/book-queries';
+	import type { BookSummary } from '#lib/features/book/book-queries.ts';
 	import BookCover from '#lib/features/book/components/BookCover.svelte';
-	import { buildHref, type SearchParams } from '#lib/url-state';
+	import { buildHref, type SearchParams } from '#lib/url-state.ts';
 
 	const GRID_SIZES =
 		'(min-width: 1280px) 14vw, (min-width: 1024px) 16vw, (min-width: 768px) 20vw, (min-width: 640px) 25vw, 33vw';

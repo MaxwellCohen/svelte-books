@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ITEMS_PER_PAGE } from '#lib/features/book/book-constants';
+	import { ITEMS_PER_PAGE } from '#lib/features/book/book-constants.ts';
 	import BookCoverSkeleton from '#lib/features/book/components/BookCoverSkeleton.svelte';
 
 	const gridClass =

@@ -9,8 +9,8 @@
 		getTotalPages,
 		withPage,
 		type SearchParams
-	} from '#lib/url-state';
-	import { cn } from '#lib/utils';
+	} from '#lib/url-state.ts';
+	import { cn } from '#lib/utils.ts';
 
 	const stepClass =
 		'text-muted hover:bg-card dark:hover:bg-card-dark focus-visible:ring-action/40 inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-sm font-medium transition-colors hover:text-black focus-visible:ring-2 focus-visible:outline-none dark:hover:text-white';

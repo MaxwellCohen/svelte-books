@@ -1,4 +1,4 @@
-import { ITEMS_PER_PAGE } from "#lib/features/book/book-constants";
+import { ITEMS_PER_PAGE } from "#lib/features/book/book-constants.ts";
 
 export type SearchParams = {
   delay?: string;

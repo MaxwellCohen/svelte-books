@@ -2,11 +2,11 @@
 	import Button from '#lib/components/ui/Button.svelte';
 	import EmptyState from '#lib/components/ui/EmptyState.svelte';
 	import ErrorState from '#lib/components/ui/ErrorState.svelte';
-	import { EMPTY_IMAGE_URL, getLargeBookImageUrl } from '#lib/features/book/book-constants';
+	import { EMPTY_IMAGE_URL, getLargeBookImageUrl } from '#lib/features/book/book-constants.ts';
 	import BackToBooksLink from '#lib/features/book/components/BackToBooksLink.svelte';
 	import BookDetail from '#lib/features/book/components/BookDetail.svelte';
 	import BookDetailSkeleton from '#lib/features/book/components/BookDetailSkeleton.svelte';
-	import type { BookDetails } from '#lib/features/book/book-queries';
+	import type { BookDetails } from '#lib/features/book/book-queries.ts';
 	import type { PageProps } from './$types';
 
 	const DETAIL_SIZES = '(min-width: 768px) 18rem, 60vw';

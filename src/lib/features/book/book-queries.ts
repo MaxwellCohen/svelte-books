@@ -4,14 +4,14 @@ import {
   ITEMS_PER_PAGE,
   MIN_RATING,
   MIN_YEAR,
-} from "#lib/features/book/book-constants";
-import { GENERATED_PREVIEW_BOOKS } from "#lib/features/book/book-preview-catalog";
-import type { BookFilters, BookQuery } from "#lib/features/book/book-utils";
-import { SAMPLE_BOOKS } from "#lib/features/book/data/sample-books";
-import { getBookCoverUrl } from "#lib/features/book/data/cover-images";
-import { withTtlCache } from "#lib/server/catalog-cache";
-import { db } from "#lib/server/db";
-import { authors, books, bookToAuthor } from "#lib/server/db/schema";
+} from "#lib/features/book/book-constants.ts";
+import { GENERATED_PREVIEW_BOOKS } from "#lib/features/book/book-preview-catalog.ts";
+import type { BookFilters, BookQuery } from "#lib/features/book/book-utils.ts";
+import { SAMPLE_BOOKS } from "#lib/features/book/data/sample-books.ts";
+import { getBookCoverUrl } from "#lib/features/book/data/cover-images.ts";
+import { withTtlCache } from "#lib/server/catalog-cache.ts";
+import { db } from "#lib/server/db/index.ts";
+import { authors, books, bookToAuthor } from "#lib/server/db/schema.ts";
 
 export type BookSummary = {
   id: number;

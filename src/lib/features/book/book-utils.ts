@@ -7,8 +7,8 @@ import {
   MIN_PAGES,
   MIN_RATING,
   MIN_YEAR,
-} from '#lib/features/book/book-constants';
-import type { SearchParams } from '#lib/url-state';
+} from '#lib/features/book/book-constants.ts';
+import type { SearchParams } from '#lib/url-state.ts';
 
 export function getLanguageLabel(code: string | null): string {
   if (!code) return 'Unknown';

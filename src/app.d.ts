@@ -14,23 +14,21 @@ interface ImportMeta {
 }
 
 declare global {
+	namespace Cloudflare {
+		interface Env {
+			CATALOG_CACHE?: {
+				get(key: string, type: 'json'): Promise<unknown>;
+				put(key: string, value: string, options?: { expirationTtl: number }): Promise<void>;
+			};
+		}
+	}
+
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
 		// interface PageState {}
-		interface Platform {
-			env: {
-				CATALOG_CACHE: {
-					get(key: string, type: 'json'): Promise<unknown>;
-					put(
-						key: string,
-						value: string,
-						options?: { expirationTtl: number }
-					): Promise<void>;
-				};
-			};
-		}
+		// interface Platform {}
 	}
 }
 

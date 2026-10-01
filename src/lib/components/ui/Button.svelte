@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { cn } from '#lib/utils';
+	import { cn } from '#lib/utils.ts';
 
 	type Variant = 'ghost' | 'primary' | 'secondary';
 	type Size = 'default' | 'icon' | 'sm';
