@@ -56,6 +56,9 @@ export default defineConfig({
 			},
 
 			adapter: adapter(),
+			// Put page CSS in the HTML, same idea as Next `inlineCss` and Nuxt `inlineStyles`.
+			// Any finite stylesheet is below this, including the Tailwind bundle.
+			inlineStyleThreshold: Number.POSITIVE_INFINITY,
 			experimental: { remoteFunctions: true, forkPreloads: true }
 		})
 	]

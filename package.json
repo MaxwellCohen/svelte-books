@@ -16,8 +16,8 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
-		"preview:cloudflare": "CLOUDFLARE=1 vite build && npx --yes wrangler@4.132.0 dev",
-		"deploy:cloudflare": "CLOUDFLARE=1 vite build && npx --yes wrangler@4.132.0 deploy"
+		"preview:cloudflare": "pnpm exec wrangler dev",
+		"deploy:cloudflare": "pnpm exec wrangler deploy"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
@@ -43,7 +43,8 @@
 		"tailwindcss": "^4.3.0",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.60.1",
-		"vite": "^8.1.5"
+		"vite": "^8.1.5",
+		"wrangler": "4.132.0"
 	},
 	"imports": {
 		"#lib": "./src/lib/index.js",
