@@ -1,7 +1,10 @@
 import { toBookFilters, toBookQuery } from '#lib/features/book/book-utils.ts';
 import { getBooksCount, getBooksPage } from '#lib/server/books.ts';
+import { catalogIsrConfig } from '#lib/server/page-isr.ts';
 import { getApiDelayMs, parseSearchParams } from '#lib/url-state.ts';
 import type { PageServerLoad } from './$types';
+
+export const config = catalogIsrConfig;
 
 function streamed<T>(promise: Promise<T>): Promise<T> {
 	promise.catch(() => {});
