@@ -3,3 +3,4 @@ allowBuilds:
   workerd: true
 minimumReleaseAgeExclude:
   - '@cloudflare/workers-types'
+  - vite@8.4.0
