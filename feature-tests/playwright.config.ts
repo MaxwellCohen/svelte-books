@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 
-export const PORT = 4105;
+export const PORT = Number(process.env.FT_PORT ?? 4105);
 
 export default defineConfig({
 	testDir: '.',

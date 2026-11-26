@@ -3,7 +3,7 @@ import { execSync, spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const PORT = 4105;
+const PORT = Number(process.env.FT_PORT ?? 4105);
 const root = path.resolve(import.meta.dirname, '..');
 process.chdir(root);
 const sh = (cmd, env = {}) => execSync(cmd, { stdio: 'inherit', env: { ...process.env, ...env } });

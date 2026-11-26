@@ -6,7 +6,7 @@ Validates each Framework Compare label for SvelteKit against a **production buil
 npm run test:features   # = node feature-tests/run.mjs
 ```
 
-The runner builds (`vite build`, Vercel adapter), serves the build with `vite preview` on port 4105,
+The runner builds (`vite build`, Vercel adapter), serves the build with `vite preview` on port 4105 (override with `FT_PORT`),
 runs the `browser` Playwright project (system Chrome at `/home/maxc/.local/bin/google-chrome`), stops
 the server, runs the `build` project (extra builds), and writes `feature-tests/results.json`.
 
