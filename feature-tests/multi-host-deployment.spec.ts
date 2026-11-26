@@ -9,7 +9,7 @@ const targets = [
 		env: { NETLIFY: '1' },
 		out: ['.netlify/v1/functions/sveltekit-render.mjs', 'build/_app']
 	},
-	{ name: 'cloudflare', env: { CLOUDFLARE: '1' }, out: ['.svelte-kit/cloudflare/_worker.js'] },
+	{ name: 'cloudflare', env: { CLOUDFLARE: '1' }, out: ['.svelte-kit/cloudflare/worker/index.js', '.svelte-kit/cloudflare/client'] },
 	// Last so the default (Vercel) build is what's left on disk.
 	{ name: 'vercel', env: {}, out: ['.vercel/output/config.json', '.vercel/output/functions'] }
 ];
