@@ -17,14 +17,18 @@
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
 		"preview:cloudflare": "pnpm exec wrangler dev",
-		"deploy:cloudflare": "pnpm exec wrangler deploy"
+		"deploy:cloudflare": "pnpm exec wrangler deploy",
+		"test:features": "node feature-tests/run.mjs"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@neondatabase/serverless": "^1.1.0",
+		"@playwright/test": "^1.65.1",
+		"@qwik.dev/partytown": "^1.0.5",
 		"@sveltejs/adapter-cloudflare": "^8.0.0",
 		"@sveltejs/adapter-netlify": "^7.0.1",
 		"@sveltejs/adapter-vercel": "^7.0.0",
+		"@sveltejs/enhanced-img": "^1.0.1",
 		"@sveltejs/kit": "^3.0.1",
 		"@sveltejs/vite-plugin-svelte": "^7.3.1",
 		"@tailwindcss/vite": "^4.3.0",
@@ -38,6 +42,7 @@
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^4.1.0",
 		"prettier-plugin-tailwindcss": "^0.8.0",
+		"rollup-plugin-visualizer": "^7.3.0",
 		"svelte": "^5.57.2",
 		"svelte-check": "^4.7.6",
 		"tailwindcss": "^4.3.0",

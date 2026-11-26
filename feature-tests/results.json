@@ -1,0 +1,85 @@
+{
+  "framework": "sveltekit",
+  "repo": "svelte-books",
+  "commit": "458f3f5db8d3dc8637ac85594154015190b84fc7",
+  "ranAt": "2026-11-26T05:39:56.075Z",
+  "results": {
+    "css-inlining": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "sveltekit({ inlineStyleThreshold: Infinity }) in vite.config.ts",
+      "evidence": "HTML has 1 inline <style> (37875 chars) containing the .ft-css-inline-marker rule; 2 <link rel=stylesheet> all disabled+media=\"(max-width: 0)\" placeholders, 0 render-blocking",
+      "test": "feature-tests/css-inlining.spec.ts"
+    },
+    "font-optimization": {
+      "claimedLabel": "third-party",
+      "status": "pass",
+      "method": "@fontsource-variable/geist (self-hosted, font-display: swap) + SvelteKit handle hook resolve(event, { preload }) for the Latin woff2",
+      "evidence": "preload as=font geist-latin-wght-normal.BgDaEnEv.woff2; 5 @font-face with font-display:swap; 1 same-origin font requests; 0 Google Fonts requests",
+      "test": "feature-tests/font-optimization.spec.ts"
+    },
+    "image-pipeline": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "@sveltejs/enhanced-img plugin + <enhanced:img sizes=…> on a local JPEG",
+      "evidence": "<picture> with avif/webp/jpeg <source> srcsets (540,768,1080,1366,1536,1600w); <img> width=1600 height=1000; offscreen loading=lazy; photo.CXZkYjKV.avif served as image/avif; browser picked avif",
+      "test": "feature-tests/image-pipeline.spec.ts"
+    },
+    "caching": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "setHeaders cache-control on a +server.ts endpoint (HTTP cache) + adapter-vercel per-route `config.isr`",
+      "evidence": "data endpoint cache-control \"public, max-age=5, s-maxage=60\"; browser fetch counter 2→2 within TTL, 3 after 6s; adapter-vercel wrote caching.prerender-config.json expiration=60 (ISR itself only runs on Vercel)",
+      "test": "feature-tests/caching.spec.ts"
+    },
+    "route-prefetching": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "data-sveltekit-preload-data=\"hover\" on the link",
+      "evidence": "on hover (before click): /feature-tests/route-prefetching/target/__data.json + 1 route node chunk(s); 1 data request(s) total, so click reused the preload",
+      "test": "feature-tests/route-prefetching.spec.ts"
+    },
+    "islands": {
+      "claimedLabel": "manual",
+      "status": "pass",
+      "method": "hand-rolled: route `csr = false` + separately bundled island entry (?worker&url) that mounts one Svelte component",
+      "evidence": "csr=false page + hand-rolled island entry (?worker&url, svelte mount): 1 JS file(s) loaded (island-entry-7dbpQtc5.js), none contain static marker, no SvelteKit runtime; island counter reached 2",
+      "test": "feature-tests/islands.spec.ts"
+    },
+    "render-modes": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "page options: prerender = true / prerender = false (SSR) / ssr = false (CSR) per route",
+      "evidence": "prerender: prerendered.html in build output (+ .vercel/output/static), stamp stable 2026-11-26T05:39:07.451Z; ssr stamp 2026-11-26T05:39:22.508Z→2026-11-26T05:39:22.549Z; ssr=false route HTML has no content, browser renders it",
+      "test": "feature-tests/render-modes.spec.ts"
+    },
+    "reactivity": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "Svelte 5 runes ($state) with a component-script run counter",
+      "evidence": "3 clicks → count text 3; component script ran 1×; 3 DOM mutation(s), all on #ft-count (characterData:ft-count)",
+      "test": "feature-tests/reactivity.spec.ts"
+    },
+    "bundle-analysis": {
+      "claimedLabel": "third-party",
+      "status": "pass",
+      "method": "rollup-plugin-visualizer in vite.config.ts behind ANALYZE=1",
+      "evidence": "ANALYZE=1 vite build wrote .svelte-kit/stats/{client.html,server.html} (client.html 338 KB, includes route modules)",
+      "test": "feature-tests/bundle-analysis.spec.ts"
+    },
+    "third-party-scripts": {
+      "claimedLabel": "third-party",
+      "status": "pass",
+      "method": "@qwik.dev/partytown: partytownVite() + partytownSnippet() in route +layout.svelte svelte:head, <script type=\"text/partytown\">",
+      "evidence": "<script type=\"text/partytown\"> in HTML (main-thread parser skips it); requests: document /~partytown/partytown-sandbox-sw.html, fetch /fake-third-party.js; fetched by the Partytown web worker (1 worker(s)), never as a main-thread script; it set html[data-fake-third-party=ran] via Partytown's DOM proxy (window global visible on main thread: false); final script type=text/partytown-x",
+      "test": "feature-tests/third-party-scripts.spec.ts"
+    },
+    "multi-host-deployment": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "@sveltejs/adapter-netlify / adapter-cloudflare / adapter-vercel chosen by env in vite.config.ts",
+      "evidence": "3 adapter builds succeeded: netlify→.netlify/v1/functions/sveltekit-render.mjs+build/_app; cloudflare→.svelte-kit/cloudflare/_worker.js; vercel→.vercel/output/config.json+.vercel/output/functions",
+      "test": "feature-tests/multi-host-deployment.spec.ts"
+    }
+  }
+}
