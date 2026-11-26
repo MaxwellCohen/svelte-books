@@ -1,8 +1,8 @@
 {
   "framework": "sveltekit",
   "repo": "svelte-books",
-  "commit": "51eed7f9ea1eb6c4bdb5a86e23712b71b76e2092",
-  "ranAt": "2026-11-26T05:05:24.498Z",
+  "commit": "458f3f5db8d3dc8637ac85594154015190b84fc7",
+  "ranAt": "2026-11-26T05:39:56.075Z",
   "results": {
     "css-inlining": {
       "claimedLabel": "first-party",
@@ -50,7 +50,7 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "page options: prerender = true / prerender = false (SSR) / ssr = false (CSR) per route",
-      "evidence": "prerender: prerendered.html in build output (+ .vercel/output/static), stamp stable 2026-11-26T05:04:19.416Z; ssr stamp 2026-11-26T05:04:39.963Z→2026-11-26T05:04:39.993Z; ssr=false route HTML has no content, browser renders it",
+      "evidence": "prerender: prerendered.html in build output (+ .vercel/output/static), stamp stable 2026-11-26T05:39:07.451Z; ssr stamp 2026-11-26T05:39:22.508Z→2026-11-26T05:39:22.549Z; ssr=false route HTML has no content, browser renders it",
       "test": "feature-tests/render-modes.spec.ts"
     },
     "reactivity": {
