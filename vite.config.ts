@@ -78,7 +78,11 @@ export default defineConfig({
 				adapter === vercelAdapter && !process.env.VERCEL
 					? // Local builds on Node 26 (feature tests): pin the runtime Vercel would infer on Node 24.
 						vercelAdapter({ runtime: 'nodejs24.x' })
-					: adapter(),
+					: adapter === cloudflareAdapter
+						? // wrangler.jsonc is the adapter's input; wrangler.json is only for a bare
+							// `wrangler deploy` / `versions upload` on a clean checkout (Workers Builds).
+							cloudflareAdapter({ config: 'wrangler.jsonc' })
+						: adapter(),
 			// Put page CSS in the HTML, same idea as Next `inlineCss` and Nuxt `inlineStyles`.
 			// Any finite stylesheet is below this, including the Tailwind bundle.
 			inlineStyleThreshold: Number.POSITIVE_INFINITY,
