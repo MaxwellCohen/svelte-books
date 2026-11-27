@@ -69,21 +69,6 @@ function envFlag(name: string) {
 	}
 }
 
-/** Cloudflare Workers freeze Response headers; copy them onto a new Response. */
-export function htmlResponseWithCacheHeaders(_request: Request, response: Response): Response {
-	if (!response.headers.get('content-type')?.includes('text/html')) return response;
-	const headers = new Headers(response.headers);
-	headers.set('Cache-Control', hostDocumentCacheControl());
-	headers.delete('CDN-Cache-Control');
-	headers.delete('Vercel-CDN-Cache-Control');
-	headers.delete('Netlify-CDN-Cache-Control');
-	return new Response(response.body, {
-		status: response.status,
-		statusText: response.statusText,
-		headers
-	});
-}
-
 async function platformGet<T>(key: string): Promise<T | undefined> {
 	try {
 		if (catalogKv) {
